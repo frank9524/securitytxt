@@ -1,0 +1,38 @@
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+# This is a test security.txt
+  # Wil a semi-colon work: or not?
+Contact: mailto:whitehats@test.ts
+Contact: http://test.ts/whitehats
+Expires: 2099-11-05T00:00:00.000Z
+Encryption: http://www.test.ts/encryption
+Encryption: http://encryption.test.ts
+Acknowledgments: http://www.test.ts/acknowledgments
+Acknowledgments: http://acknowledgments.test.ts
+Preferred-Languages: en, es, ru
+Canonical: http://www.test.ts/.well-known/security.txt
+Canonical: http://test.ts/security.txt
+Policy: http://www.test.ts/policy
+Policy: http://policy.test.ts
+Hiring: http://www.test.ts/hiring
+Hiring: http://jobs.test.ts/
+
+-----BEGIN PGP SIGNATURE-----
+
+jQJIBAEBCgAyFiEE1cD4xEQeM0fIV4BUct81iRYiOc8FAmFI6aQUHHNlY3VyaXR5
+QGJlZGRpdC5jb20ACgkQct81iRYiOc/flw/9FVnnCcLsr11Yseo9LpZL4P7hvm2e
+WXCi8JCGcaeid94TWqM9jfKXfZCzx3W4OcqMHcEqIZEVNvfKGxkRWqAnsfE/rcUO
+o1sT2JtGG8W2UuuBtZp7F1BKt37DxiJ6dRVX1Cc5kPUclxzbgl4Mvwz2XWSbwOmi
+33z/1YP6YK0T6+HZHfLx7bChxaFTMV4tOB+NkMhMIe6jH0YUpGY25oQSXrYXhRJP
+9oWhowU+vRat8qlJvhTnvw362ZBCXAh0xmdzgXiQjJs70+lahOAm2eCC98DRjpwo
+8cwekUt66mMcglAsOHIIQuAIEFEv2Ep02GF0l3tjGQt+tLz9rMgCVArWqhwwfH4E
+Eu164VBeA32gSN97S7GBGceZltzNF7/7KMxl2qf3jDxE4fmZFK50/ZTFPd7IAxm0
+ZNt8TKoegBmyZdcSEUUEbJNFEMG+r4JYaT2joVxo1lk9q1faxcEYB+Wvzgj6Yxn8
+KtwncPY3DkOtOcB0z8ZDQhL8vqf3lEfjcnIkzELRQTjcCeGk5Ohx3fEzu0sH/y/w
+W4nbHKN6TH3SRgRvHjGwJdCkWpzXshXrfJXSxl6wRu19fgi2pa0gCSourjk4pDxN
+0di+zCtpR1ntY3rYVd2zM3AmXjRqo1Bx2FizI8HUXjagj6TugZKFqcAO4+1NOopX
+Mi2HBnRL88Z7Qnd=
+=+S/q
+-----END PGP SIGNATURE-----

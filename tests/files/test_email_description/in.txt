@@ -1,0 +1,5 @@
+If you have stumbled across a security bug, let us know!
+
+Contact: the email address "security" on the domain "xxxx.com"
+Acknowledgments: http://www.xxxx.com/hackers.txt
+Hiring: http://www.xxxx.com/jobs

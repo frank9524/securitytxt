@@ -1,0 +1,16 @@
+# Dit is de security.txt
+# Deze is voor test purposes van de package
+Contact: mailto:security@xxxxxxxx.yy
+Contact: http://www.xxxxxxxx.yy/643255
+Expires: 2028-02-13T14:00:00.000Z
+Encryption: http://www.xxxxxxxx.yy/54354
+Encryption: http://www.xxxxxxxx.yy/431232
+Acknowledgments: http://www.xxxxxxxx.yy/432432
+Acknowledgments: http://www.xxxxxxxx.yy/11123
+Preferred-Languages: en, es, ru
+Canonical: http://www.xxxxxxxx.yy/.well-known/security.txt
+Canonical: http://www.yyyyyyyy.xx/.well-known/security.txt
+Policy: http://www.xxxxxxxx.yy/321443
+Policy: http://www.xxxxxxxx.yy/432143
+Hiring: http://www.xxxxxxxx.yy/321321321
+Hiring: http://workatxxxxxxxx.yy/
