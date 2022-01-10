@@ -16,10 +16,7 @@ parses security.txt files that contain minor mistakes. The package is well-docum
 combination with `pydoc`:
 
 ## Installation
-Security-TXT is available on PyPI:
-```
-$ python -m pip install security-txt
-```
+Security-TXT is not yet available on PyPI. I am currently working on this.
 The package has only been tested with Python 3.6.8+
 
 ## Supported Features & Best–Practices
