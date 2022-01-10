@@ -12,11 +12,11 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/fwesters/security-txt",
     project_urls={
-        "Source": 'https://github.com/fwesters/security-txt',
-        "Bug Tracker": "https://github.com/fwesters/security-txt/issues",
+        "Source": 'https://github.com/fwesters/securitytxt',
+        "Bug Tracker": "https://github.com/fwesters/securitytxt/issues",
     },
     classifiers=[
-        "Development Status :: 3 - Alpha"
+        "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
