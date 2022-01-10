@@ -1,0 +1,1 @@
+from .securitytxt import SecurityTXT

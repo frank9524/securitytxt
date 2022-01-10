@@ -21,7 +21,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
     ],
-    package_dir={"": "securitytxt"},
-    packages=setuptools.find_packages(where="securitytxt"),
+    packages=setuptools.find_packages(),
     python_requires=">=3.6",
+    install_requires=['requests', 'python-dateutil'],
 )

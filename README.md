@@ -1,7 +1,7 @@
 # Security-TXT
 Security-TXT is a simple security.txt library.
 ```Python
->>> from security_txt import SecurityTXT
+>>> from securitytxt import SecurityTXT
 >>> sec = SecurityTXT.from_url("adobe.com")
 >>> sec.contact
 ['https://hackerone.com/adobe', 'mailto:psirt@adobe.com']
