@@ -1,7 +1,7 @@
 from typing import Optional, List, Dict
 
 from urllib.parse import urlparse
-from requests import get
+from requests import get, exceptions
 
 from securitytxt.parsers.file_parser import FileParser
 from securitytxt.securitytxt import SecurityTXT
@@ -27,16 +27,16 @@ class URLParser:
     """
     possible_paths = ['/.well-known/security.txt', '/security.txt']
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.0; WOW64; rv:24.0) Gecko/20100101 Firefox/24.0'}
-    default_scheme = "https"
+    possible_schemes = ["https", "http"]
 
     def __init__(self, url: str, strict_url: bool = False, possible_paths: Optional[List[str]] = None,
-                 headers: Optional[Dict] = None, default_scheme: str = None):
+                 headers: Optional[Dict] = None, possible_schemes: Optional[List[str]] = None):
         """Initialize the variables."""
         self.securitytxt: Optional[SecurityTXT] = None
         self.strict_url = strict_url
         self.possible_paths = possible_paths if possible_paths else self.possible_paths
         self.headers = headers if headers else self.headers
-        self.default_scheme = default_scheme if default_scheme else self.default_scheme
+        self.possible_schemes = possible_schemes if possible_schemes else self.possible_schemes
         self._parse(url)
 
     def _parse(self, url: str) -> None:
@@ -65,15 +65,17 @@ class URLParser:
             return [base_url]
         normalized_url = self._normalize_url(base_url)
         parsed_url = urlparse(normalized_url)
-        return [f"{parsed_url.scheme}://{parsed_url.netloc}{path}" for path in self.possible_paths]
+        return [f"{scheme}://{parsed_url.netloc}{path}"
+                for path in self.possible_paths
+                for scheme in self.possible_schemes]
 
     def _normalize_url(self, url: str) -> str:
         """
-        Normalize a url for further processing. E.g. add a scheme in case it is missing.
+        Normalize a url for further processing, e.g. add slashes for urlparse
         :param url: The url to normalize
         :return: The normalized url.
         """
-        return url if '//' in url else f"{self.default_scheme}://" + url
+        return url if '//' in url else f"//{url}"
 
     def _parse_file_url(self, file_url: str) -> bool:
         """
@@ -87,7 +89,7 @@ class URLParser:
             self.securitytxt = FileParser(file).securitytxt
             self.securitytxt.source_url = file_url
             return True
-        except ConnectionError:
+        except exceptions.RequestException:
             return False
 
     def _get_file(self, url: str) -> str:

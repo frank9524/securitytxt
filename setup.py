@@ -4,19 +4,19 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="security-txt",
-    version="0.1",
+    name="wellknown-securitytxt",
+    version="0.9.2",
     author="fwesters",
     description="A package for finding and parsing security.txt files",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/fwesters/security-txt",
+    url="https://github.com/fwesters/securitytxt",
     project_urls={
         "Source": 'https://github.com/fwesters/securitytxt',
         "Bug Tracker": "https://github.com/fwesters/securitytxt/issues",
     },
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        " Development Status :: 4 - Beta",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",

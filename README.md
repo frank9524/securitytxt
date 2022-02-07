@@ -12,13 +12,13 @@ False
 ```
 Security-TXT allows you to easily retrieve, parse and manipulate security.txt files. It tries to follow the latest 
 [draft RFC](https://datatracker.ietf.org/doc/html/draft-foudil-securitytxt-12) as closely as possible, while it still 
-parses security.txt files that contain minor mistakes. The package is well-documented, thereby easy to use in 
-combination with `pydoc`:
+parses security.txt files that contain minor mistakes. The package aims to be well-documented, thereby easy to use in 
+combination with `pydoc`.
 
 ## Installation
 Security-TXT is available on PyPI:
 ```
-$ python -m pip install security-txt
+$ python -m pip install wellknown-securitytxt
 ```
 The package has only been tested with Python 3.6.8+
 
@@ -26,6 +26,7 @@ The package has only been tested with Python 3.6.8+
 The package has been build to support easy and automated retrieval and parsing of security.txt files. Therefore,
 features include:
 * Automated searching for security.txt files on specified host.
+* Looking for security.txt files on IP-adresses.
 * Signature parsing for signed files.
 * Allows for parsing unknown fields and comments that are present in security.txt file.
 * Automated validity tests for parsed security.txt files.
