@@ -1,5 +1,5 @@
-# Security-TXT
-Security-TXT is a simple security.txt library.
+# SecurityTXT
+SecurityTXT is a simple security.txt library.
 ```Python
 >>> from securitytxt import SecurityTXT
 >>> sec = SecurityTXT.from_url("adobe.com")
@@ -10,13 +10,13 @@ Security-TXT is a simple security.txt library.
 >>> sec.expired
 False
 ```
-Security-TXT allows you to easily retrieve, parse and manipulate security.txt files. It tries to follow the latest 
+SecurityTXT allows you to easily retrieve, parse and manipulate security.txt files. It tries to follow the latest 
 [draft RFC](https://datatracker.ietf.org/doc/html/draft-foudil-securitytxt-12) as closely as possible, while it still 
 parses security.txt files that contain minor mistakes. The package aims to be well-documented, thereby easy to use in 
 combination with `pydoc`.
 
 ## Installation
-Security-TXT is available on PyPI:
+SecurityTXT is available on PyPI:
 ```
 $ python -m pip install wellknown-securitytxt
 ```
@@ -32,4 +32,4 @@ features include:
 * Every class and function is fully documented.
 
 Soon to be implemented:
-* `fail_silently`: if a file format is invalid, it continues parsing the rest of the line instead of raising an error.
+* `fail_silently`: if a file format is invalid, continue parsing the rest of the lines instead of raising an error.
