@@ -26,7 +26,6 @@ The package has only been tested with Python 3.6.8+
 The package has been build to support easy and automated retrieval and parsing of security.txt files. Therefore,
 features include:
 * Automated searching for security.txt files on specified host.
-* Looking for security.txt files on IP-adresses.
 * Signature parsing for signed files.
 * Allows for parsing unknown fields and comments that are present in security.txt file.
 * Automated validity tests for parsed security.txt files.
