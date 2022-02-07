@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="wellknown-securitytxt",
-    version="0.9.2",
+    version="0.9.5",
     author="fwesters",
     description="A package for finding and parsing security.txt files",
     long_description=long_description,
@@ -16,7 +16,7 @@ setuptools.setup(
         "Bug Tracker": "https://github.com/fwesters/securitytxt/issues",
     },
     classifiers=[
-        " Development Status :: 4 - Beta",
+        "Development Status :: 4 - Beta",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
