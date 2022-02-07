@@ -30,13 +30,15 @@ class URLParser:
     possible_schemes = ["https", "http"]
 
     def __init__(self, url: str, strict_url: bool = False, possible_paths: Optional[List[str]] = None,
-                 headers: Optional[Dict] = None, possible_schemes: Optional[List[str]] = None):
+                 headers: Optional[Dict] = None, possible_schemes: Optional[List[str]] = None,
+                 allow_redirects: bool = True):
         """Initialize the variables."""
         self.securitytxt: Optional[SecurityTXT] = None
         self.strict_url = strict_url
         self.possible_paths = possible_paths if possible_paths else self.possible_paths
         self.headers = headers if headers else self.headers
         self.possible_schemes = possible_schemes if possible_schemes else self.possible_schemes
+        self.allow_redirects = allow_redirects
         self._parse(url)
 
     def _parse(self, url: str) -> None:
@@ -99,7 +101,7 @@ class URLParser:
         :return: The text of a security.txt
         :raises ConnectionError: If the URL does not contain a security.txt
         """
-        response = get(url, headers=self.headers, allow_redirects=True)
+        response = get(url, headers=self.headers, allow_redirects=self.allow_redirects)
         if not response.ok:
             raise ConnectionError(f"Url {url} returned non-successful status code {response.status_code}")
         if '<htm' in response.text:
