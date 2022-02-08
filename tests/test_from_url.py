@@ -8,51 +8,43 @@ from securitytxt.securitytxt import SecurityTXT
 
 @requests_mock.Mocker()
 class TestFromURL(unittest.TestCase):
-    files_dir = f"{os.path.dirname(os.path.realpath(__file__))}/files/"
+    example_file = open(f"{os.path.dirname(os.path.realpath(__file__))}/files/test_signed/in.txt").read()
+    expected_result = open(f"{os.path.dirname(os.path.realpath(__file__))}/files/test_signed/out.txt").read()
 
     def test_existing_securitytxt_standard_location(self, m: requests_mock.Mocker):
         url = "https://test.com/.well-known/security.txt"
-        m.get(url, text=open(f"{self.files_dir}/test_signed/in.txt").read(), status_code=200)
+        m.get(url, text=self.example_file, status_code=200)
         result = self.get_result(url)
-        expected_result = open(f"{self.files_dir}/test_signed/out.txt").read()
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result, self.expected_result)
 
     def test_existing_securitytxt_no_protocol(self, m: requests_mock.Mocker):
-        url = "https://test.com/.well-known/security.txt"
-        m.get(url, text=open(f"{self.files_dir}/test_signed/in.txt").read(), status_code=200)
+        m.get("https://test.com/.well-known/security.txt", text=self.example_file, status_code=200)
         result = self.get_result("test.com")
-        expected_result = open(f"{self.files_dir}/test_signed/out.txt").read()
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result, self.expected_result)
 
     def test_existing_root_securitytxt(self, m: requests_mock.Mocker):
-        url = "https://test.com/security.txt"
         m.get(requests_mock.ANY, status_code=404)
-        m.get(url, text=open(f"{self.files_dir}/test_signed/in.txt").read(), status_code=200)
+        m.get("https://test.com/security.txt", text=self.example_file, status_code=200)
         result = self.get_result("test.com")
-        expected_result = open(f"{self.files_dir}/test_signed/out.txt").read()
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result, self.expected_result)
 
     def test_http_securitytxt(self, m: requests_mock.Mocker):
-        url = "http://test.com/security.txt"
         m.get(requests_mock.ANY, status_code=404)
-        m.get(url, text=open(f"{self.files_dir}/test_signed/in.txt").read(), status_code=200)
+        m.get("http://test.com/security.txt", text=self.example_file, status_code=200)
         result = self.get_result("test.com")
-        expected_result = open(f"{self.files_dir}/test_signed/out.txt").read()
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result, self.expected_result)
 
     def test_existing_strict_url(self, m: requests_mock.Mocker):
         url = "https://test.com/random/security.txt"
         m.get(requests_mock.ANY, status_code=404)
-        m.get(url, text=open(f"{self.files_dir}/test_signed/in.txt").read(), status_code=200)
+        m.get(url, text=self.example_file, status_code=200)
         result = self.get_result(url, strict_url=True)
-        expected_result = open(f"{self.files_dir}/test_signed/out.txt").read()
-        self.assertEqual(result, expected_result)
+        self.assertEqual(result, self.expected_result)
 
     def test_nonexisting_strict_url(self, m: requests_mock.Mocker):
         with self.assertRaises(FileNotFoundError):
-            url = "https://test.com/random/security.txt"
             m.get(requests_mock.ANY, status_code=404)
-            m.get(url, text=open(f"{self.files_dir}/test_signed/in.txt").read(), status_code=200)
+            m.get("https://test.com/random/security.txt", text=self.example_file, status_code=200)
             self.get_result("https://test.com/something_else/security.txt", strict_url=True)
 
     def test_nonexisting_securitytxt(self, m: requests_mock.Mocker):
@@ -64,6 +56,13 @@ class TestFromURL(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             m.get(requests_mock.ANY, status_code=200, text="<html><body>This page could not be found</body></html>")
             self.get_result("test.com")
+
+    def test_prioritize_https(self, m: requests_mock.Mocker):
+        m.get(requests_mock.ANY, status_code=404)
+        m.get("https://test.com/.well-known/security.txt", text=self.example_file, status_code=200)
+        m.get("http://test.com/.well-known/security.txt", text="Contact: test@test.com", status_code=200)
+        result = self.get_result("test.com")
+        self.assertEqual(result, self.expected_result)
 
     def get_result(self, url: str, strict_url=False) -> str:
         securitytxt = SecurityTXT.from_url(url, strict_url)
