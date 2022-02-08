@@ -1,27 +1,73 @@
+import os
 import unittest
+import operator
+import requests_mock
 
 from securitytxt.securitytxt import SecurityTXT
 
 
+@requests_mock.Mocker()
 class TestFromURL(unittest.TestCase):
-    SECURITYTXT_URLS = ["google.com", "youtube.com", "amazon.com", "yahoo.com", "facebook.com", "reddit.com",
-                        "linkedin.com", "walmart.com", "chaturbate.com", "canva.com", "adobe.com", "dropbox.com",
-                        "paypal.com", "wordpress.com", "redfin.com", "tradingview.com", "roblox.com", "slack.com",
-                        "tumblr.com", "vimeo.com", "github.com", "bbc.com", "wix.com", "grammarly.com", "google.com.hk",
-                        "aol.com", "theguardian.com", "expedia.com", "hubspot.com", "nextdoor.com", "shopify.com",
-                        "chess.com", "investopedia.com", "amazon.co.uk", "marriott.com", "southwest.com",
-                        "creditkarma.com", "okta.com", "bbc.co.uk", "istockphoto.com", "samsclub.com", "techcrunch.com",
-                        "trello.com"]
-    NONSECURITYTXT_URLS = ["foxnews.com", "bongacams.com", "realtor.com", "hbomax.com", "weather.com", "ca.gov"]
+    files_dir = f"{os.path.dirname(os.path.realpath(__file__))}/files/"
 
-    def test_existing_url(self):
-        for url in self.SECURITYTXT_URLS:
-            with self.subTest(msg=f"Checking test case {url}"):
-                SecurityTXT.from_url(f"http://{url}")
+    def test_existing_securitytxt_standard_location(self, m: requests_mock.Mocker):
+        url = "https://test.com/.well-known/security.txt"
+        m.get(url, text=open(f"{self.files_dir}/test_signed/in.txt").read(), status_code=200)
+        result = self.get_result(url)
+        expected_result = open(f"{self.files_dir}/test_signed/out.txt").read()
+        self.assertEqual(result, expected_result)
 
-    def test_nonexisting_url(self):
-        SecurityTXT.from_url('http://adp.com')
-        for url in self.NONSECURITYTXT_URLS:
-            with self.subTest(msg=f"Checking test case {url}"):
-                self.assertRaises(FileNotFoundError, lambda: SecurityTXT.from_url(f"http://{url}"))
+    def test_existing_securitytxt_no_protocol(self, m: requests_mock.Mocker):
+        url = "https://test.com/.well-known/security.txt"
+        m.get(url, text=open(f"{self.files_dir}/test_signed/in.txt").read(), status_code=200)
+        result = self.get_result("test.com")
+        expected_result = open(f"{self.files_dir}/test_signed/out.txt").read()
+        self.assertEqual(result, expected_result)
+
+    def test_existing_root_securitytxt(self, m: requests_mock.Mocker):
+        url = "https://test.com/security.txt"
+        m.get(requests_mock.ANY, status_code=404)
+        m.get(url, text=open(f"{self.files_dir}/test_signed/in.txt").read(), status_code=200)
+        result = self.get_result("test.com")
+        expected_result = open(f"{self.files_dir}/test_signed/out.txt").read()
+        self.assertEqual(result, expected_result)
+
+    def test_http_securitytxt(self, m: requests_mock.Mocker):
+        url = "http://test.com/security.txt"
+        m.get(requests_mock.ANY, status_code=404)
+        m.get(url, text=open(f"{self.files_dir}/test_signed/in.txt").read(), status_code=200)
+        result = self.get_result("test.com")
+        expected_result = open(f"{self.files_dir}/test_signed/out.txt").read()
+        self.assertEqual(result, expected_result)
+
+    def test_existing_strict_url(self, m: requests_mock.Mocker):
+        url = "https://test.com/random/security.txt"
+        m.get(requests_mock.ANY, status_code=404)
+        m.get(url, text=open(f"{self.files_dir}/test_signed/in.txt").read(), status_code=200)
+        result = self.get_result(url, strict_url=True)
+        expected_result = open(f"{self.files_dir}/test_signed/out.txt").read()
+        self.assertEqual(result, expected_result)
+
+    def test_nonexisting_strict_url(self, m: requests_mock.Mocker):
+        with self.assertRaises(FileNotFoundError):
+            url = "https://test.com/random/security.txt"
+            m.get(requests_mock.ANY, status_code=404)
+            m.get(url, text=open(f"{self.files_dir}/test_signed/in.txt").read(), status_code=200)
+            self.get_result("https://test.com/something_else/security.txt", strict_url=True)
+
+    def test_nonexisting_securitytxt(self, m: requests_mock.Mocker):
+        with self.assertRaises(FileNotFoundError):
+            m.get(requests_mock.ANY, status_code=404)
+            self.get_result("test.com", strict_url=True)
+
+    def test_nonexisting_securitytxt_with_html_404(self, m: requests_mock.Mocker):
+        with self.assertRaises(FileNotFoundError):
+            m.get(requests_mock.ANY, status_code=200, text="<html><body>This page could not be found</body></html>")
+            self.get_result("test.com")
+
+    def get_result(self, url: str, strict_url=False) -> str:
+        securitytxt = SecurityTXT.from_url(url, strict_url)
+        result = {k: v for k, v in sorted(securitytxt.__dict__.items(), key=operator.itemgetter(0))}
+        result['source_url'] = None
+        return str(result)
 
