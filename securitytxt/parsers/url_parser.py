@@ -91,7 +91,7 @@ class URLParser:
             self.securitytxt = FileParser(file).securitytxt
             self.securitytxt.source_url = file_url
             return True
-        except exceptions.RequestException:
+        except (exceptions.RequestException, ConnectionError):
             return False
 
     def _get_file(self, url: str) -> str:
