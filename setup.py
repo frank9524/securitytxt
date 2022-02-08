@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="wellknown-securitytxt",
-    version="0.9.5",
+    version="0.9.7",
     author="fwesters",
     description="A package for finding and parsing security.txt files",
     long_description=long_description,
@@ -17,7 +17,7 @@ setuptools.setup(
     },
     classifiers=[
         "Development Status :: 4 - Beta",
-        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
     ],
