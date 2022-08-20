@@ -96,19 +96,20 @@ class SecurityTXT:
             getattr(self, key).append(value)
 
     @staticmethod
-    def from_url(url: str, strict_url: bool = False) -> 'SecurityTXT':
+    def from_url(url: str, strict_url: bool = False, verify: Optional[Union[bool, str]] = None) -> 'SecurityTXT':
         """
         Retrieve and parse a securitytxt from a given url or IP address. Unless strict_url is set, it will also look for
         the securitytxt at paths that are allowed according to the specification, such as /.well-known/security.txt
         :param url: The url / IP from which to retrieve the securitytxt
         :param strict_url: Set to True to only look at the url specified, not any subpaths like '.well-known/security.txt'
+        :param verify: allows the use of custom certificate for retrieving the securitytxt file
         :return: A SecurityTXT object, that represents the securitytxt found.
         :raises FileNotFoundError: if no security.txt file could be found on the URL.
         :raises AttributeError: if a security.txt has been found, but could not be parsed.
         :raises requests.exceptions.RequestException: for all other exceptions concerning requests
         """
         from securitytxt.parsers.url_parser import URLParser
-        return URLParser(url, strict_url).securitytxt
+        return URLParser(url, strict_url, verify=verify).securitytxt
 
     @staticmethod
     def from_text(text: str) -> 'SecurityTXT':

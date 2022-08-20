@@ -1,7 +1,8 @@
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Union
 
 from urllib.parse import urlparse
-from requests import get, exceptions
+from requests import get
+from requests.exceptions import RequestException
 
 from securitytxt.parsers.file_parser import FileParser
 from securitytxt.securitytxt import SecurityTXT
@@ -31,7 +32,7 @@ class URLParser:
 
     def __init__(self, url: str, strict_url: bool = False, possible_paths: Optional[List[str]] = None,
                  headers: Optional[Dict] = None, possible_schemes: Optional[List[str]] = None,
-                 allow_redirects: bool = True):
+                 allow_redirects: bool = True, verify: Optional[Union[bool, str]] = None):
         """Initialize the variables."""
         self.securitytxt: Optional[SecurityTXT] = None
         self.strict_url = strict_url
@@ -39,6 +40,7 @@ class URLParser:
         self.headers = headers if headers else self.headers
         self.possible_schemes = possible_schemes if possible_schemes else self.possible_schemes
         self.allow_redirects = allow_redirects
+        self.verify = verify
         self._parse(url)
 
     def _parse(self, url: str) -> None:
@@ -49,11 +51,18 @@ class URLParser:
         """
         possible_file_urls = self._get_possible_file_urls(url)
         # For all possible urls where a security.txt could be located, check if there is one.
+        # Collect the errors to show to user in case no matching security.txt is found.
+        errors = {}
         for file_url in possible_file_urls:
-            if self._parse_file_url(file_url):
+            try:
+                self._parse_file_url(file_url)
                 # The file has been parsed and set, so we can stop looking for other security.txt files
                 return
-        raise FileNotFoundError(f"No SecurityTXT File found on this url: {url}")
+            except (RequestException, ConnectionError) as e:
+                errors[file_url] = str(e)
+        raise FileNotFoundError(
+            f"No SecurityTXT File found on this url: {url}. The following exceptions occurred: {errors}"
+        )
 
     def _get_possible_file_urls(self, base_url: str) -> List[str]:
         """
@@ -79,20 +88,18 @@ class URLParser:
         """
         return url if '//' in url else f"//{url}"
 
-    def _parse_file_url(self, file_url: str) -> bool:
+    def _parse_file_url(self, file_url: str) -> None:
         """
         Given a URL to (possibly) a security.txt file, get the file and parse it into a securityTXT object.
-        :param file_url: A URL to location where a security.txt might be located.
-        :returns True if a file has been found and parsed. False otherwise.
+        :param: file_url: A URL to location where a security.txt might be located.
+        :returns: True if a file has been found and parsed. False otherwise.
         :raises AttributeError: if the file could not be parsed.
+        :raises RequestException: if the requests to the server could not be made
+        :raises ConnectionError: if the server returned a non securitytxt response.
         """
-        try:
-            file = self._get_file(file_url)
-            self.securitytxt = FileParser(file).securitytxt
-            self.securitytxt.source_url = file_url
-            return True
-        except (exceptions.RequestException, ConnectionError):
-            return False
+        file = self._get_file(file_url)
+        self.securitytxt = FileParser(file).securitytxt
+        self.securitytxt.source_url = file_url
 
     def _get_file(self, url: str) -> str:
         """
@@ -101,7 +108,7 @@ class URLParser:
         :return: The text of a security.txt
         :raises ConnectionError: If the URL does not contain a security.txt
         """
-        response = get(url, headers=self.headers, allow_redirects=self.allow_redirects)
+        response = get(url, headers=self.headers, allow_redirects=self.allow_redirects, verify=self.verify)
         if not response.ok:
             raise ConnectionError(f"Url {url} returned non-successful status code {response.status_code}")
         if '<htm' in response.text:
